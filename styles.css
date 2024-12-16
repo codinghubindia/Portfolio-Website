@@ -28,6 +28,10 @@ p, li {
     padding: 1rem 2rem;
     color: #fff;
     font-size: calc(0.9rem + 0.2vw);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .nav-links {
@@ -39,11 +43,12 @@ p, li {
 .nav-links a {
     text-decoration: none;
     color: #fff;
-    transition: color 0.3s;
+    transition: color 0.3s, transform 0.3s;
 }
 
 .nav-links a:hover {
     color: #ffcc00;
+    transform: scale(1.1);
 }
 
 /* Hero Section */
@@ -67,12 +72,12 @@ p, li {
     font-weight: bold;
     border-radius: 5px;
     text-decoration: none;
-    transition: background 0.3s, color 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .hero-section .cta-button:hover {
-    background: #007acc;
-    color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Section Titles */
@@ -80,6 +85,8 @@ section h2 {
     text-align: center;
     margin-bottom: 1rem;
     color: #007acc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* About Section */
@@ -112,6 +119,7 @@ section h2 {
     font-weight: bold;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .skill:before {
@@ -151,12 +159,24 @@ section h2 {
     padding: 1rem;
     border: 1px solid #ddd;
     border-radius: 5px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.project:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .project a {
     text-decoration: none;
     color: #007acc;
     font-weight: bold;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.project a:hover {
+    color: #ffcc00;
+    transform: scale(1.1);
 }
 
 /* Contact Section */
@@ -166,12 +186,47 @@ section h2 {
     text-align: center;
 }
 
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.contact-form input, .contact-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.contact-form button {
+    background: #007acc;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.contact-form button:hover {
+    background: #005fa3;
+    transform: scale(1.05);
+}
+
 /* Footer */
 footer {
     text-align: center;
     padding: 1rem;
     background: #007acc;
     color: #fff;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Media Queries for Responsiveness */
@@ -186,8 +241,6 @@ footer {
 
     .navbar {
         flex-direction: column;
+        gap: 1rem;
     }
 }
-
-/*  */
-

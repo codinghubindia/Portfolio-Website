@@ -1,6 +1,6 @@
 // GSAP Animations
 
-// Text Animation: "I am Manjunatha" Letter by Letter
+// Hero Section Typing Effect
 const textElement = document.querySelector(".hero-content h1");
 const text = "Hi, I am Manjunatha N";
 let index = 0;
@@ -11,23 +11,21 @@ function typeEffect() {
         index++;
         setTimeout(typeEffect, 150);
     } else {
-        setTimeout(() => {
-            textElement.textContent = "";
-            index = 0;
-            typeEffect();
-        }, 2000); // Pause before looping
+        textElement.style.borderRight = "2px solid #fff"; // Cursor effect
     }
 }
 
-typeEffect();
+if (textElement) {
+    typeEffect();
+}
 
-// Enhanced Hero Section Animation with Better Design and Progress Bar
+// Enhanced Hero Section Animation
 const heroTl = gsap.timeline();
 heroTl
-    .from(".hero-content h1", {
+    .from(".hero-image", {
         duration: 1.5,
         opacity: 0,
-        y: 50,
+        scale: 0.8,
         ease: "power4.out",
     })
     .from(".hero-content p", {
@@ -36,21 +34,16 @@ heroTl
         y: 30,
         ease: "power4.out",
     }, "-=1")
-    .from(".hero-content .cta-button", {
+    .from(".cta-button", {
         duration: 1,
         opacity: 0,
         y: 30,
         ease: "power4.out",
-    }, "-=0.8")
-    .to(".progress-bar", {
-        width: "100%",
-        duration: 1.5,
-        ease: "power2.out",
-    }, "-=1");
+    }, "-=0.8");
 
-// Navbar Links Hover Animation
-const navLinks = document.querySelectorAll(".nav-links li a");
-navLinks.forEach((link) => {
+// Projects Section Hover Effect
+const projectLinks = document.querySelectorAll(".project a");
+projectLinks.forEach(link => {
     link.addEventListener("mouseenter", () => {
         gsap.to(link, {
             duration: 0.3,
@@ -62,80 +55,23 @@ navLinks.forEach((link) => {
     link.addEventListener("mouseleave", () => {
         gsap.to(link, {
             duration: 0.3,
-            color: "#fff",
+            color: "#007acc",
             scale: 1,
         });
     });
 });
 
-// Sections Scroll Animations
-const sections = document.querySelectorAll("section");
-
-sections.forEach((section, index) => {
-    gsap.from(section, {
-        scrollTrigger: {
-            trigger: section,
-            start: "top 85%",
-            toggleActions: "play none none none",
-        },
-        duration: 1.2,
-        y: 50,
-        opacity: 0,
-        ease: "power3.out",
-        delay: index * 0.2,
-    });
-
-    // Add unified background for all sections to maintain a professional theme
-    gsap.to(section, {
-        scrollTrigger: {
-            trigger: section,
-            start: "top 90%",
-            toggleActions: "play none none none",
-        },
-        backgroundColor: "#f8f9fa", // Light gray for consistency across sections
-        duration: 1,
-        ease: "power2.out",
-    });
-});
-
-// Skills Section Animation
-const skillsTl = gsap.timeline({
+// Contact Form Animation
+const formTl = gsap.timeline({
     scrollTrigger: {
-        trigger: ".skills-section",
-        start: "top 80%",
-        toggleActions: "play none none none",
-    },
-});
-
-skillsTl.from(".skill", {
-    duration: 0.6,
-    scale: 0.8,
-    opacity: 0,
-    stagger: 0.15,
-    ease: "back.out(1.7)",
-});
-
-// Project Cards Float-In Effect
-gsap.from(".project", {
-    scrollTrigger: {
-        trigger: ".projects-section",
-        start: "top 85%",
-    },
-    duration: 1,
-    x: 100,
-    opacity: 0,
-    stagger: 0.3,
-    ease: "power2.out",
-});
-
-// Footer Fade-In Animation
-gsap.from("footer", {
-    scrollTrigger: {
-        trigger: "footer",
+        trigger: ".contact-section",
         start: "top 90%",
     },
-    duration: 1.2,
-    y: 30,
+});
+formTl.from(".contact-form input, .contact-form textarea, .contact-form button", {
+    duration: 0.5,
     opacity: 0,
+    y: 20,
+    stagger: 0.2,
     ease: "power2.out",
 });
