@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --grid-color: 75 85 99; /* Gray-600 */
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 0 0% 100%;
+    --grid-color: 209 213 219; /* Gray-300 */
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-gray-900 antialiased transition-colors duration-300 dark:bg-gray-900 dark:text-white;
+}
+
+.animate-section {
+  /* No opacity: 0 here */
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-primary-500 to-secondary-500 bg-clip-text text-transparent animate-gradient;
+}
+
+.gradient-border {
+  @apply relative before:absolute before:inset-0 before:-z-10 before:rounded-lg before:p-1 before:bg-gradient-to-r before:from-primary-500 before:to-secondary-500;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-700;
+}
+
+/* Card hover effect */
+.card-hover {
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-2xl;
+}
+
+/* Magnetic button effect */
+.magnetic-button {
+  @apply relative transition-transform duration-300 ease-out;
+}
+
+/* Timeline animations */
+.timeline-item {
+  @apply opacity-0 translate-y-8 transition-all duration-700;
+}
+
+.timeline-item.visible {
+  @apply opacity-100 translate-y-0;
+}
+
+.bg-grid-pattern {
+  background-image: linear-gradient(to right, rgb(var(--grid-color) / 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--grid-color) / 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Particle animation styles */
+.particles-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Enhanced gradient animation */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+/* Enhanced background effects */
+.blur-gradient {
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
+}
+
+/* Animated gradient background */
+.gradient-animate {
+  background: linear-gradient(
+    45deg,
+    rgba(124, 58, 237, 0.1),
+    rgba(59, 130, 246, 0.1),
+    rgba(236, 72, 153, 0.1)
+  );
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Enhanced blur effects */
+.blur-behind {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Glowing effect for skill cards */
+.skill-card {
+  position: relative;
+}
+
+.skill-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+    rgba(139, 92, 246, 0.1) 0%,
+    rgba(139, 92, 246, 0) 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.skill-card:hover::before {
+  opacity: 1;
+}
+
+/* Animated background gradient */
+.gradient-bg {
+  background: linear-gradient(
+    45deg,
+    rgba(139, 92, 246, 0.1),
+    rgba(59, 130, 246, 0.1),
+    rgba(236, 72, 153, 0.1)
+  );
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Glowing dots */
+.glow-dot {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
