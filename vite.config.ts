@@ -9,31 +9,18 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'vendor-react';
-            }
-            if (id.includes('gsap')) {
-              return 'vendor-gsap';
-            }
-            if (id.includes('lucide')) {
-              return 'vendor-icons';
-            }
-            return 'vendor';
-          }
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-gsap': ['gsap'],
+          'vendor-mui': ['@mui/material', '@emotion/react', '@emotion/styled'],
+          'vendor-animation': ['framer-motion', 'typed.js', 'split-type'],
         }
       }
     },
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
-    sourcemap: false,
-    chunkSizeWarningLimit: 1000
+    minify: 'esbuild',
+    sourcemap: true,
+    chunkSizeWarningLimit: 1000,
+    copyPublicDir: true
   },
   server: {
     open: true,
@@ -44,5 +31,5 @@ export default defineConfig({
   css: {
     devSourcemap: true,
   },
-  base: '/REPO/',
+  base: '/Portfolio-Website/',
 });
