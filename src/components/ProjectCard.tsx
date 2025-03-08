@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Github, Globe, ExternalLink } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProjectModal from './ProjectModal';
 
 interface ProjectProps {
@@ -14,92 +14,173 @@ interface ProjectProps {
 }
 
 const ProjectCard: React.FC<ProjectProps> = (project) => {
+  const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showDemo, setShowDemo] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const openModal = () => {
-    setShowDemo(false);
-    setIsModalOpen(true);
-  };
-
-  const openDemoModal = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowDemo(true);
-    setIsModalOpen(true);
+  const handleCardClick = () => {
+    if (window.innerWidth < 768) {
+      setIsExpanded(!isExpanded);
+    }
   };
 
   return (
     <>
       <motion.div
-        className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer"
-        onClick={openModal}
-        whileHover={{ y: -10 }}
+        className="group relative bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-500"
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={{ 
+          opacity: 1, 
+          y: 0,
+          scale: isExpanded ? 1.05 : 1,
+          zIndex: isExpanded ? 10 : 0
+        }}
+        whileHover={{ y: -8 }}
+        onClick={handleCardClick}
         transition={{ duration: 0.3 }}
       >
-        <div className="relative h-48 overflow-hidden">
-          <motion.img 
-            src={project.image} 
-            alt={project.title} 
+        {/* Glass morphism effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        
+        {/* Image Container */}
+        <div className="relative h-56 overflow-hidden">
+          <motion.img
+            src={project.image}
+            alt={project.title}
             className="w-full h-full object-cover"
-            loading="lazy"
-            width="400"
-            height="200"
-            decoding="async"
-            fetchPriority="low"
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.5 }}
+            initial={{ scale: 1 }}
+            animate={{ scale: isHovered || isExpanded ? 1.1 : 1 }}
+            transition={{ duration: 0.4 }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end justify-center p-4">
-            <button 
-              className="bg-white text-purple-600 px-4 py-2 rounded-full font-medium flex items-center gap-2 hover:bg-purple-50 transition-colors"
-              onClick={openModal}
-            >
-              View Details <ExternalLink size={16} />
-            </button>
-          </div>
+          
+          {/* Desktop Overlay */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          >
+            <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
+              <motion.button
+                className="px-4 py-2 bg-white/90 text-purple-600 rounded-full font-medium text-sm flex items-center gap-2 hover:bg-white"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsModalOpen(true);
+                }}
+              >
+                View Details <ExternalLink size={14} />
+              </motion.button>
+              
+              <div className="flex gap-2">
+                <motion.a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 bg-white/90 text-purple-600 rounded-full hover:bg-white"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={e => e.stopPropagation()}
+                >
+                  <Globe size={18} />
+                </motion.a>
+                <motion.a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 bg-white/90 text-purple-600 rounded-full hover:bg-white"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={e => e.stopPropagation()}
+                >
+                  <Github size={18} />
+                </motion.a>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Mobile Overlay - Shows when card is expanded */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent md:hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-3">
+                  <motion.a
+                    href={project.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full px-4 py-3 bg-white/90 text-purple-600 rounded-full font-medium text-sm flex items-center justify-center gap-2"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 20, opacity: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    <Globe size={18} />
+                    View Live Demo
+                  </motion.a>
+                  <motion.a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full px-4 py-3 bg-white/90 text-purple-600 rounded-full font-medium text-sm flex items-center justify-center gap-2"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 20, opacity: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <Github size={18} />
+                    View Source Code
+                  </motion.a>
+                  <motion.button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsModalOpen(true);
+                      setIsExpanded(false);
+                    }}
+                    className="w-full px-4 py-3 bg-white/90 text-purple-600 rounded-full font-medium text-sm flex items-center justify-center gap-2"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 20, opacity: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <ExternalLink size={18} />
+                    View Details
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+
+        {/* Content */}
         <div className="p-6">
-          <h3 className="font-display text-heading-3 font-bold mb-2 dark:text-white">{project.title}</h3>
-          <p className="text-body text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {project.tech.slice(0, 3).map((tech, i) => (
-              <span key={i} className="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-body-sm dark:text-gray-300">
+          <h3 className="font-display text-xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+            {project.title}
+          </h3>
+          <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2">
+            {project.description}
+          </p>
+          
+          {/* Tech Stack */}
+          <div className="flex flex-wrap gap-2">
+            {project.tech.map((tech, index) => (
+              <span
+                key={index}
+                className="px-3 py-1 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 rounded-full"
+              >
                 {tech}
               </span>
             ))}
-            {project.tech.length > 3 && (
-              <span className="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-body-sm dark:text-gray-300">
-                +{project.tech.length - 3}
-              </span>
-            )}
-          </div>
-          <div className="flex gap-4">
-            <button 
-              onClick={openDemoModal}
-              className="flex items-center gap-2 text-body text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-medium"
-            >
-              <Globe size={20} /> Live Demo
-            </button>
-            <a 
-              href={project.github} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-2 text-body text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-medium"
-            >
-              <Github size={20} /> Code
-            </a>
           </div>
         </div>
       </motion.div>
 
-      <ProjectModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+      <ProjectModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         project={project}
-        showDemo={showDemo}
       />
     </>
   );

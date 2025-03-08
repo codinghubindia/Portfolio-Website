@@ -114,26 +114,14 @@ body {
 
 /* Animated gradient background */
 .gradient-animate {
-  background: linear-gradient(
-    45deg,
-    rgba(124, 58, 237, 0.1),
-    rgba(59, 130, 246, 0.1),
-    rgba(236, 72, 153, 0.1)
-  );
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
+  background-size: 200% 200%;
+  animation: gradientMove 15s ease infinite;
 }
 
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Enhanced blur effects */
@@ -207,7 +195,8 @@ body {
   height: 80%;
   background: linear-gradient(to bottom, #843dff, #ff3d77, #3d91ff);
   border-radius: 2px;
-  animation: blink 0.8s steps(2) infinite;
+  animation: blink 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  opacity: 1;
 }
 
 @keyframes blink {
@@ -215,6 +204,33 @@ body {
     opacity: 1;
   }
   50% {
-    opacity: 0;
+    opacity: 0.3;
   }
+}
+
+/* Glass morphism effects */
+.glass-card {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Modern hover effects */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+}
+
+/* Smooth animations */
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
 }

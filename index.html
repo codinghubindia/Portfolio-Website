@@ -3,21 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="Professional portfolio showcasing web development and app development services" />
     <meta name="theme-color" content="#843dff" />
     <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
     <title>Manjunatha N | Full Stack Developer</title>
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Preload critical assets -->
-    <link rel="preconnect" href="https://images.unsplash.com" />
-    
-    <!-- Inline critical CSS -->
+    <!-- Critical CSS inline -->
     <style>
       .loading-screen {
         display: flex;
@@ -26,7 +18,7 @@
         min-height: 100vh;
         width: 100vw;
         background: linear-gradient(to bottom, #f9fafb, #ffffff);
-        font-family: 'Inter', sans-serif;
+        transition: background-color 0.3s ease;
       }
 
       .dark .loading-screen {
@@ -35,55 +27,25 @@
 
       .loader {
         position: relative;
-        width: 96px;
-        height: 96px;
+        width: 80px;
+        height: 80px;
       }
 
       .loader-ring {
         position: absolute;
         inset: 0;
         border-radius: 50%;
-        border: 4px solid transparent;
+        border: 3px solid transparent;
         border-top-color: #843dff;
         border-right-color: #ff3d77;
         border-bottom-color: #3d91ff;
-        animation: spin 1.5s linear infinite;
+        animation: spin 1s linear infinite;
       }
 
-      .loader-text {
-        position: absolute;
-        top: 120px;
-        left: 50%;
-        transform: translateX(-50%);
-        color: #843dff;
-        font-size: 1.25rem;
-        font-weight: 600;
-        white-space: nowrap;
-        opacity: 0;
-        animation: fadeIn 0.5s ease-out forwards 0.5s;
-      }
-
-      .dark .loader-text {
-        color: #a78bfa;
-      }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      @keyframes fadeIn {
-        to {
-          opacity: 1;
-        }
-      }
-
-      /* Gradient animation for the ring */
       .loader-ring::before {
         content: '';
         position: absolute;
-        inset: -4px;
+        inset: -3px;
         border-radius: 50%;
         background: linear-gradient(to right, #843dff, #ff3d77, #3d91ff);
         -webkit-mask: 
@@ -95,21 +57,106 @@
         -webkit-mask-composite: xor;
         mask-composite: exclude;
         animation: borderRotate 2s linear infinite;
+        /* Add a subtle glow effect */
+        filter: drop-shadow(0 0 2px rgba(132, 61, 255, 0.3));
+      }
+
+      .loader-text {
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: system-ui, -apple-system, sans-serif;
+        color: #843dff;
+        font-size: 1rem;
+        font-weight: 500;
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards 0.5s;
+        white-space: nowrap;
+      }
+
+      .dark .loader-text {
+        color: #a78bfa;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
       }
 
       @keyframes borderRotate {
-        to {
-          transform: rotate(-360deg);
+        from { transform: rotate(0deg); }
+        to { transform: rotate(-360deg); }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+      }
+
+      /* Fix for potential white borders in dark mode */
+      @media (prefers-color-scheme: dark) {
+        .loading-screen {
+          background: #111827;
+        }
+      }
+
+      /* Ensure no white flash during load */
+      html {
+        background: #f9fafb;
+      }
+
+      html.dark {
+        background: #111827;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      /* Mobile optimizations */
+      @media (max-width: 768px) {
+        .loader {
+          width: 60px;
+          height: 60px;
+        }
+
+        .loader-ring {
+          border-width: 2px;
+        }
+
+        .loader-ring::before {
+          inset: -2px;
+        }
+
+        .loader-text {
+          font-size: 0.875rem;
+          top: 80px;
+        }
+      }
+
+      /* Prevent content shifting */
+      html {
+        overflow-y: scroll;
+      }
+
+      /* Optimize animations for reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .loader-ring {
+          animation-duration: 1.5s;
+        }
+        
+        .loader-text {
+          animation-duration: 0.7s;
         }
       }
     </style>
 
-    <!-- Theme detection script -->
+    <!-- Defer non-critical CSS -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- Minimal theme detection -->
     <script>
-      // Check for dark mode preference
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      }
+      localStorage.theme === 'dark' && document.documentElement.classList.add('dark');
     </script>
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages
@@ -126,6 +173,16 @@
         }
       }(window.location))
     </script>
+
+    <!-- Preload critical JavaScript -->
+    <link rel="modulepreload" href="/src/main.tsx" />
+    
+    <!-- Add resource hints -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   </head>
   <body>
     <div id="root">

@@ -42,7 +42,7 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({
         backDelay,
         loop,
         startDelay,
-        onComplete,
+        onComplete: onComplete || (() => {}), // Provide default empty function
         smartBackspace: false,
         showCursor: false, // Hide default cursor
       });

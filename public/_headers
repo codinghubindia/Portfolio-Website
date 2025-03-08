@@ -1,2 +1,4 @@
 /*
-  Permissions-Policy: interest-cohort=() 
+  Permissions-Policy: interest-cohort=()
+  Cache-Control: public, max-age=31536000
+  X-Content-Type-Options: nosniff 
