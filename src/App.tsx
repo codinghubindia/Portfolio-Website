@@ -1,14 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from './components/Navbar';
 import ProgressBar from './components/ProgressBar';
-import Timeline from './components/Timeline';
 import { Github, Mail} from 'lucide-react';
-import ProjectCard from './components/ProjectCard';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import TypingAnimation from './components/TypingAnimation';
+import { useImagePreload } from './hooks/useImagePreload';
+import LoadingScreen from './components/LoadingScreen';
 gsap.registerPlugin(ScrollTrigger);
+
+// Lazy load components that are not immediately visible
+const Timeline = lazy(() => import('./components/Timeline'));
+const ProjectCard = lazy(() => import('./components/ProjectCard'));
+const SkillsSection = lazy(() => import('./components/SkillsSection'));
 
 // Move data outside component to prevent re-creation on renders
 const projects = [
@@ -63,14 +68,23 @@ const services = [
 ];
 
 function App() {
-  // State for positions and window dimensions
   const [positions, setPositions] = useState<Array<{ x: number, y: number }>>([]);
   const [windowDimensions, setWindowDimensions] = useState({
     width: typeof window !== 'undefined' ? window.innerWidth : 1200,
     height: typeof window !== 'undefined' ? window.innerHeight : 800
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [typingPhase, setTypingPhase] = useState(1);
+  const [staticText, setStaticText] = useState('');
 
-  // Update window dimensions on resize
+  const criticalImages = [
+    // Add your critical image URLs here
+    projects[0].image,
+    projects[1].image
+  ];
+  
+  const imagesLoaded = useImagePreload(criticalImages);
+
   useEffect(() => {
     const handleResize = () => {
       setWindowDimensions({
@@ -83,7 +97,6 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Calculate positions after component mount and when window resizes
   useEffect(() => {
     const calculatePositions = () => {
       const pos: Array<{ x: number, y: number }> = [];
@@ -110,7 +123,6 @@ function App() {
     calculatePositions();
   }, [windowDimensions]);
 
-  // Update the generateRandomPosition function to use provided dimensions
   const generateRandomPosition = (
     existingPositions: Array<{ x: number, y: number }>,
     elementSize: number = 100,
@@ -163,6 +175,22 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    Promise.all([
+      document.fonts.ready,
+      new Promise(resolve => setTimeout(resolve, 1500)), // Slightly longer minimum time for smoother transition
+      // Add other critical resources here
+    ]).then(() => {
+      if (imagesLoaded) {
+        setIsLoading(false);
+      }
+    });
+  }, [imagesLoaded]);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   // Update the Timeline data to include certifications
   const timelineData = [
@@ -409,35 +437,62 @@ function App() {
               </motion.div>
 
               <div className="relative">
-                <TypingAnimation 
-                  strings={[
-                    "Hello, I'm Manjunatha N",
-                    "Full Stack Developer",
-                    "Building Digital Experiences"
-                  ]}
-                  className="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-center bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 bg-clip-text text-transparent"
-                  typeSpeed={50}
-                  backSpeed={30}
-                  backDelay={2000}
-                  loop={true}
-                />
-                
-                {/* Custom Animated Cursor */}
-                <motion.div
-                  className="absolute -right-4 top-1/2 transform -translate-y-1/2"
-                  animate={{ 
-                    opacity: [1, 0, 1],
-                    height: ["2em", "2em", "2em"]
-                  }}
-                  transition={{ 
-                    duration: 0.8, 
-                    repeat: Infinity,
-                    ease: "steps(1)" 
-                  }}
-                >
-                  <div className="w-1 bg-gradient-to-b from-purple-600 via-pink-500 to-blue-500 rounded-full"
-                       style={{ height: "2em" }} />
-                </motion.div>
+                <AnimatePresence mode="wait">
+                  {typingPhase === 1 ? (
+                    <motion.div
+                      key="phase1"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <TypingAnimation 
+                        strings={["Hello, I'm Manjunatha N.", ""]}
+                        typeSpeed={50}
+                        backSpeed={30}
+                        loop={false}
+                        showCursor={true}
+                        onComplete={() => setTypingPhase(2)}
+                      />
+                    </motion.div>
+                  ) : typingPhase === 2 ? (
+                    <motion.div
+                      key="phase2"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <TypingAnimation 
+                        strings={["Full Stack Developer", ""]}
+                        typeSpeed={50}
+                        backSpeed={30}
+                        loop={false}
+                        showCursor={true}
+                        onComplete={() => setTypingPhase(3)}
+                      />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="phase3"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <TypingAnimation 
+                        strings={[
+                          "Building Digital Experiences",
+                          "Creating Modern Solutions",
+                          "Transforming Ideas into Reality"
+                        ]}
+                        typeSpeed={50}
+                        backSpeed={30}
+                        backDelay={2000}
+                        loop={true}
+                        startDelay={500}
+                        className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-center bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 bg-clip-text text-transparent"
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Bottom Decorative Line */}
@@ -825,14 +880,14 @@ function App() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project, index) => (
-              <ProjectCard 
-                key={index}
-                {...project}
-              />
-            ))}
-          </div>
+          {/* Portfolio Section */}
+          <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading...</div>}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project, index) => (
+                <ProjectCard key={index} {...project} />
+              ))}
+            </div>
+          </Suspense>
         </div>
       </section>
 
@@ -864,7 +919,10 @@ function App() {
       <section id="timeline" className="py-24 px-4 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto animate-section" style={{ opacity: 1 }}>
           <h2 className="font-display text-heading-1 font-bold text-center mb-12 dark:text-white">Education</h2>
-          <Timeline items={timelineData} />
+          {/* Timeline Section */}
+          <Suspense fallback={<div className="h-96 flex items-center justify-center">Loading...</div>}>
+            <Timeline items={timelineData} />
+          </Suspense>
         </div>
       </section>
 

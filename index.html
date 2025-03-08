@@ -23,22 +23,94 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100vh;
+        min-height: 100vh;
         width: 100vw;
-        background-color: #f9fafb;
-      }
-      @media (prefers-color-scheme: dark) {
-        .loading-screen {
-          background-color: #111827;
-        }
-      }
-      body {
+        background: linear-gradient(to bottom, #f9fafb, #ffffff);
         font-family: 'Inter', sans-serif;
       }
-      h1, h2, h3 {
-        font-family: 'Playfair Display', serif;
+
+      .dark .loading-screen {
+        background: linear-gradient(to bottom, #111827, #1f2937);
+      }
+
+      .loader {
+        position: relative;
+        width: 96px;
+        height: 96px;
+      }
+
+      .loader-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 4px solid transparent;
+        border-top-color: #843dff;
+        border-right-color: #ff3d77;
+        border-bottom-color: #3d91ff;
+        animation: spin 1.5s linear infinite;
+      }
+
+      .loader-text {
+        position: absolute;
+        top: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #843dff;
+        font-size: 1.25rem;
+        font-weight: 600;
+        white-space: nowrap;
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out forwards 0.5s;
+      }
+
+      .dark .loader-text {
+        color: #a78bfa;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Gradient animation for the ring */
+      .loader-ring::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        background: linear-gradient(to right, #843dff, #ff3d77, #3d91ff);
+        -webkit-mask: 
+          linear-gradient(#fff 0 0) content-box, 
+          linear-gradient(#fff 0 0);
+        mask: 
+          linear-gradient(#fff 0 0) content-box, 
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        animation: borderRotate 2s linear infinite;
+      }
+
+      @keyframes borderRotate {
+        to {
+          transform: rotate(-360deg);
+        }
       }
     </style>
+
+    <!-- Theme detection script -->
+    <script>
+      // Check for dark mode preference
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages
       // MIT License
@@ -58,7 +130,10 @@
   <body>
     <div id="root">
       <div class="loading-screen">
-        <div style="color: #843dff; font-size: 1.5rem; font-weight: bold;">Loading...</div>
+        <div class="loader">
+          <div class="loader-ring"></div>
+          <div class="loader-text">Loading...</div>
+        </div>
       </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>

@@ -26,6 +26,7 @@ body {
 
 .animate-section {
   /* No opacity: 0 here */
+  will-change: transform, opacity;
 }
 
 .gradient-text {
@@ -66,6 +67,7 @@ body {
 /* Timeline animations */
 .timeline-item {
   @apply opacity-0 translate-y-8 transition-all duration-700;
+  will-change: transform, opacity;
 }
 
 .timeline-item.visible {
@@ -143,6 +145,7 @@ body {
 /* Glowing effect for skill cards */
 .skill-card {
   position: relative;
+  will-change: transform;
 }
 
 .skill-card::before {
@@ -182,4 +185,36 @@ body {
 /* Glowing dots */
 .glow-dot {
   box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+/* Add these optimizations to index.css */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Add these styles for the custom cursor */
+.custom-typed-cursor {
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 80%;
+  background: linear-gradient(to bottom, #843dff, #ff3d77, #3d91ff);
+  border-radius: 2px;
+  animation: blink 0.8s steps(2) infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }

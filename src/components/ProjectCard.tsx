@@ -46,6 +46,8 @@ const ProjectCard: React.FC<ProjectProps> = (project) => {
             loading="lazy"
             width="400"
             height="200"
+            decoding="async"
+            fetchPriority="low"
             whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.5 }}
           />

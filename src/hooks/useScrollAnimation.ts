@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -18,8 +18,10 @@ export const useScrollAnimation = ({
     toggleActions: 'play none none reverse',
   },
 }: AnimationOptions) => {
+  const ctx = useRef(gsap.context(() => {}));
+
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    ctx.current = gsap.context(() => {
       const elements = document.querySelectorAll(selector);
       
       elements.forEach((element) => {
@@ -33,6 +35,6 @@ export const useScrollAnimation = ({
       });
     });
 
-    return () => ctx.revert();
-  }, [selector, fromVars, scrollTrigger]);
+    return () => ctx.current.revert();
+  }, [selector]);
 }; 
