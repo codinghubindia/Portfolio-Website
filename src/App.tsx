@@ -1,10 +1,10 @@
-import { useEffect, useState, lazy, Suspense, useRef } from 'react';
+import { CSSProperties, useEffect, useState, useRef, lazy, Suspense } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from './components/Navbar';
 import ProgressBar from './components/ProgressBar';
 import { Github, Mail } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Target } from 'framer-motion';
 import TypingAnimation from './components/TypingAnimation';
 import { TouchOptimizer } from './components/TouchOptimizer';
 import DecorativeElements from './components/DecorativeElements';
@@ -260,12 +260,7 @@ function App() {
         <section id="home" className="relative min-h-screen flex items-center justify-center px-4">
           {/* Background Elements - Optimized */}
           <div 
-            className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-700"
-            style={{ 
-              opacity: isLoading ? 0 : 0.8,
-              willChange: 'transform, opacity',
-              contain: 'layout style paint'
-            }}
+            className={`absolute inset-0 pointer-events-none ${isLoading ? 'opacity-0' : 'opacity-80'} transition-opacity duration-700`}
           >
             {/* Gradient Background - More transparent */}
             <div className="absolute inset-0 overflow-hidden">
@@ -283,7 +278,6 @@ function App() {
                   ease: "linear",
                   times: [0, 0.5, 1]
                 }}
-                style={{ willChange: 'transform, opacity' }}
               />
               <motion.div
                 className="absolute bottom-0 -left-1/4 w-1/2 h-1/2 bg-gradient-to-tr from-blue-500/10 to-purple-500/10 rounded-full blur-3xl"
@@ -300,7 +294,6 @@ function App() {
                   times: [0, 0.5, 1],
                   delay: 0.5
                 }}
-                style={{ willChange: 'transform, opacity' }}
               />
             </div>
 
@@ -387,6 +380,10 @@ function App() {
                         left: `${20 + index * 25}%`,
                         top: `${40 + (index % 2) * 30}%`,
                         willChange: 'transform, opacity'
+                      }}
+                      whileHover={{ 
+                        scale: 1.05,
+                        boxShadow: "0 5px 15px rgba(124, 58, 237, 0.4)"
                       }}
                     />
                   ))}
@@ -551,8 +548,8 @@ function App() {
               >
                 <motion.a
                   href="#portfolio"
-                  className="group relative inline-flex items-center justify-center px-8 py-4 font-medium text-lg text-white overflow-hidden rounded-full"
-                  whileHover={{ scale: 1.05, boxShadow: "0 5px 15px rgba(124, 58, 237, 0.4)" }}
+                  className="group relative inline-flex items-center justify-center px-8 py-4 font-medium text-lg text-white overflow-hidden rounded-full hover:shadow-lg transition-shadow"
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-600 to-blue-500 opacity-100 group-hover:opacity-90 transition-opacity"></span>
@@ -570,8 +567,8 @@ function App() {
                 
                 <motion.a
                   href="#contact"
-                  className="group relative inline-flex items-center justify-center px-8 py-4 font-medium text-lg overflow-hidden rounded-full border-2 border-purple-600 dark:border-purple-400"
-                  whileHover={{ scale: 1.05, boxShadow: "0 5px 15px rgba(124, 58, 237, 0.2)" }}
+                  className="group relative inline-flex items-center justify-center px-8 py-4 font-medium text-lg overflow-hidden rounded-full border-2 border-purple-600 dark:border-purple-400 hover:shadow-lg transition-shadow"
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <span className="relative z-10 text-purple-600 dark:text-purple-400 group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">

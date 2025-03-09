@@ -1,8 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import compression from 'vite-plugin-compression';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), compression()],
+  base: '/Portfolio-Website/',
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
@@ -10,15 +12,19 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-gsap': ['gsap'],
-          'vendor-mui': ['@mui/material', '@emotion/react', '@emotion/styled'],
-          'vendor-animation': ['framer-motion', 'typed.js', 'split-type'],
-        }
+          vendor: ['react', 'react-dom', 'framer-motion'],
+          animations: ['gsap', 'typed.js'],
+        },
+        assetFileNames: 'assets/[name]-[hash][extname]',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js'
       }
     },
     minify: 'esbuild',
     sourcemap: true,
+    outDir: 'dist',
+    assetsDir: 'assets',
+    emptyOutDir: true,
     chunkSizeWarningLimit: 1000,
     copyPublicDir: true
   },
@@ -31,5 +37,4 @@ export default defineConfig({
   css: {
     devSourcemap: true,
   },
-  base: '/Portfolio-Website/',
 });

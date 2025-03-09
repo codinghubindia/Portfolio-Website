@@ -1,4 +1,39 @@
 /*
-  Permissions-Policy: interest-cohort=()
   Cache-Control: public, max-age=31536000
-  X-Content-Type-Options: nosniff 
+  X-Content-Type-Options: nosniff
+
+/*.html
+  Content-Type: text/html; charset=utf-8
+
+/*.js
+  Content-Type: application/javascript
+
+/*.mjs
+  Content-Type: application/javascript
+
+/*.css
+  Content-Type: text/css
+
+/*.json
+  Content-Type: application/json
+
+/*.ico
+  Content-Type: image/x-icon
+
+/*.png
+  Content-Type: image/png
+
+/*.svg
+  Content-Type: image/svg+xml
+
+/*.jpg
+  Content-Type: image/jpeg
+
+/*.webp
+  Content-Type: image/webp
+
+/*.woff2
+  Content-Type: font/woff2
+
+/*.woff
+  Content-Type: font/woff 
