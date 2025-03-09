@@ -2,14 +2,13 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteCompression from 'vite-plugin-compression';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     viteCompression({
       algorithm: 'gzip',
       ext: '.gz',
-      threshold: 10240, // Only compress files larger than 10kb
+      threshold: 10240,
     }),
     viteCompression({
       algorithm: 'brotliCompress',
@@ -35,4 +34,9 @@ export default defineConfig({
       },
     },
   },
-}); 
+  server: {
+    headers: {
+      'Content-Type': 'application/javascript', // Ensure JS files are served with correct MIME type
+    },
+  },
+});
