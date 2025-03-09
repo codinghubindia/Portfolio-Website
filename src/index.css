@@ -75,9 +75,216 @@ body {
 }
 
 .bg-grid-pattern {
-  background-image: linear-gradient(to right, rgb(var(--grid-color) / 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(var(--grid-color) / 0.1) 1px, transparent 1px);
+  background-image: linear-gradient(to right, rgba(128, 90, 213, 0.1) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(128, 90, 213, 0.1) 1px, transparent 1px);
   background-size: 24px 24px;
+}
+
+/* Enhanced Decorative Elements */
+.particles-container > div {
+  position: absolute;
+  background: linear-gradient(to right, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3));
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.dark .particles-container > div {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+/* Enhanced decorative blob */
+.decorative-blob {
+  filter: blur(40px);
+  mix-blend-mode: soft-light;
+  opacity: 0.8;
+  transform-origin: center;
+  animation: blob-rotate 20s linear infinite;
+  box-shadow: inset 0 0 50px rgba(139, 92, 246, 0.3);
+}
+
+.dark .decorative-blob {
+  mix-blend-mode: screen;
+}
+
+/* Enhanced shape styles */
+.shape {
+  position: absolute;
+  opacity: 0.15;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .shape {
+  opacity: 0.2;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.shape-circle {
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(128, 90, 213, 0.6), rgba(59, 130, 246, 0.6));
+}
+
+.shape-square {
+  border-radius: 8px;
+  background: linear-gradient(45deg, rgba(59, 130, 246, 0.6), rgba(128, 90, 213, 0.6));
+}
+
+/* Enhanced code snippet styling */
+.code-snippet {
+  font-family: 'Fira Code', monospace;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.dark .code-snippet {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .particles-container > div {
+    opacity: 0.5;
+  }
+  
+  .decorative-blob {
+    filter: blur(30px);
+    opacity: 0.6;
+  }
+  
+  .shape {
+    opacity: 0.1;
+  }
+  
+  .dark .shape {
+    opacity: 0.15;
+  }
+  
+  .code-snippet {
+    padding: 1rem;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+}
+
+/* Performance optimizations for low-end devices */
+.low-end-device .particles-container > div,
+.low-end-device .decorative-blob,
+.low-end-device .shape {
+  animation-duration: 10s;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+/* Optimize background blur */
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Gradient text utility */
+.text-gradient {
+  background: linear-gradient(to right, #805AD5, #3B82F6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glow effects */
+.glow {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.glow-text {
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+/* Animation utilities */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Gradient borders */
+.gradient-border {
+  position: relative;
+  border: double 1px transparent;
+  background-image: linear-gradient(#ffffff, #ffffff), 
+                    linear-gradient(to right, #805AD5, #3B82F6);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.dark .gradient-border {
+  background-image: linear-gradient(#1F2937, #1F2937), 
+                    linear-gradient(to right, #805AD5, #3B82F6);
+}
+
+/* Enhanced blur effects */
+.blur-3xl {
+  filter: blur(64px);
+}
+
+/* Geometric shapes */
+.shape {
+  position: absolute;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.shape-circle {
+  border-radius: 50%;
+  background: linear-gradient(45deg, #805AD5, #3B82F6);
+}
+
+.shape-square {
+  border-radius: 4px;
+  background: linear-gradient(45deg, #3B82F6, #805AD5);
+}
+
+/* Code snippet styling */
+.code-snippet {
+  font-family: 'Fira Code', monospace;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.dark .code-snippet {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(139, 92, 246, 0.2);
+}
+
+/* Enhance visibility of decorative elements */
+.decorative-blob {
+  filter: blur(50px);
+  mix-blend-mode: multiply;
+  opacity: 0.7;
+  transform-origin: center;
+  animation: blob-rotate 20s linear infinite;
+}
+
+@keyframes blob-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Particle animation styles */

@@ -1,42 +1,84 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const lastActiveSection = useRef(activeSection);
+  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // Throttle scroll event for better performance
+  const handleScroll = useCallback(() => {
+    // Only update active section if not scrolling rapidly
+    if (document.body.classList.contains('scrolling')) return;
+    
+    // Update active section based on scroll position
+    const sections = ['home', 'portfolio', 'services', 'timeline', 'contact'];
+    const current = sections.find(section => {
+      const element = document.getElementById(section);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        return rect.top <= 100 && rect.bottom >= 100;
+      }
+      return false;
+    });
+    
+    if (current && current !== lastActiveSection.current) {
+      setActiveSection(current);
+      lastActiveSection.current = current;
+    }
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      
-      // Update active section based on scroll position
-      const sections = ['home', 'portfolio', 'services', 'timeline', 'contact'];
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (current) {
-        setActiveSection(current);
+    // Use requestAnimationFrame for smoother scrolling
+    let ticking = false;
+    
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
+  }, [handleScroll]);
+
+  useEffect(() => {
+    // Add class to optimize navbar during scroll
+    const handleScrollStart = () => {
+      document.querySelector('nav')?.classList.add('scrolling-nav');
+    };
+    
+    const handleScrollEnd = () => {
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        document.querySelector('nav')?.classList.remove('scrolling-nav');
+      }, 100);
+    };
+    
+    window.addEventListener('scroll', handleScrollStart, { passive: true });
+    window.addEventListener('scrollend', handleScrollEnd, { passive: true });
+    
+    return () => {
+      window.removeEventListener('scroll', handleScrollStart);
+      window.removeEventListener('scrollend', handleScrollEnd);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
   }, []);
 
   const navItems = ['Home', 'Portfolio', 'Services', 'Timeline', 'Contact'];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-lg py-2' : 'bg-transparent py-5'
-    }`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-lg py-2`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}

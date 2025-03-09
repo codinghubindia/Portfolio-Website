@@ -13,9 +13,11 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.10",
+    "dotenv": "^16.4.7",
     "framer-motion": "^11.0.5",
     "gsap": "^3.12.2",
     "lucide-react": "^0.294.0",
