@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,79 +6,101 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const lastActiveSection = useRef(activeSection);
-  const scrollTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const lastScrollTop = useRef(0);
+  const scrollTimeout = useRef<ReturnType<typeof setTimeout>>();
 
-  // Throttle scroll event for better performance
-  const handleScroll = useCallback(() => {
-    // Only update active section if not scrolling rapidly
-    if (document.body.classList.contains('scrolling')) return;
-    
-    // Update active section based on scroll position
-    const sections = ['home', 'portfolio', 'services', 'timeline', 'contact'];
-    const current = sections.find(section => {
-      const element = document.getElementById(section);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        return rect.top <= 100 && rect.bottom >= 100;
-      }
-      return false;
-    });
-    
-    if (current && current !== lastActiveSection.current) {
-      setActiveSection(current);
-      lastActiveSection.current = current;
-    }
-  }, []);
-
+  // Improved section detection with intersection observer
   useEffect(() => {
-    // Use requestAnimationFrame for smoother scrolling
-    let ticking = false;
-    
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
+    const options = {
+      root: null,
+      rootMargin: '-50% 0px',  // Consider element in viewport when it's in the middle
+      threshold: 0
+    };
+
+    const sectionIds = ['home', 'portfolio', 'services', 'timeline', 'contact'];
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach(id => {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveSection(id);
+          }
         });
-        ticking = true;
+      }, options);
+
+      const element = document.getElementById(id);
+      if (element) {
+        observer.observe(element);
+        observers.push(observer);
       }
-    };
+    });
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    // Cleanup observers
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-    };
-  }, [handleScroll]);
-
-  useEffect(() => {
-    // Add class to optimize navbar during scroll
-    const handleScrollStart = () => {
-      document.querySelector('nav')?.classList.add('scrolling-nav');
-    };
-    
-    const handleScrollEnd = () => {
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => {
-        document.querySelector('nav')?.classList.remove('scrolling-nav');
-      }, 100);
-    };
-    
-    window.addEventListener('scroll', handleScrollStart, { passive: true });
-    window.addEventListener('scrollend', handleScrollEnd, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScrollStart);
-      window.removeEventListener('scrollend', handleScrollEnd);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      observers.forEach(observer => observer.disconnect());
     };
   }, []);
 
-  const navItems = ['Home', 'Portfolio', 'Services', 'Timeline', 'Contact'];
+  // Handle scroll events for navbar appearance
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      const navbar = document.querySelector('nav');
+      
+      if (!navbar) return;
+
+      // Add scrolling class during scroll
+      navbar.classList.add('scrolling-nav');
+      
+      // Clear existing timeout
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+
+      // Remove scrolling class after scroll stops
+      scrollTimeout.current = setTimeout(() => {
+        navbar.classList.remove('scrolling-nav');
+      }, 150);
+
+      lastScrollTop.current = currentScroll;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
+  }, []);
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const navHeight = document.querySelector('nav')?.offsetHeight || 0;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+
+      setIsMenuOpen(false);
+    }
+  };
+
+  const navItems = [
+    { id: 'home', label: 'Home' },
+    { id: 'portfolio', label: 'Portfolio' },
+    { id: 'services', label: 'Services' },
+    { id: 'timeline', label: 'Timeline' },
+    { id: 'contact', label: 'Contact' }
+  ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-lg py-2`}>
+    <nav className="fixed w-full z-50 transition-all duration-300 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg shadow-lg py-2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -87,6 +109,10 @@ const Navbar = () => {
             className="flex items-center space-x-2"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection('home');
+            }}
           >
             <span className="font-display text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 bg-clip-text text-transparent">
               MN
@@ -97,20 +123,30 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <motion.a
-                key={item}
-                href={`#${item.toLowerCase()}`}
+                key={item.id}
+                href={`#${item.id}`}
                 className={`text-nav relative group ${
-                  activeSection === item.toLowerCase()
+                  activeSection === item.id
                     ? 'text-purple-600 dark:text-purple-400'
                     : 'text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400'
                 }`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(item.id);
+                }}
                 whileHover={{ y: -2 }}
                 whileTap={{ y: 0 }}
               >
-                {item}
-                <span className={`absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-purple-600 to-blue-500 transform origin-left transition-transform duration-300 ${
-                  activeSection === item.toLowerCase() ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                }`} />
+                {item.label}
+                <motion.span 
+                  className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-purple-600 to-blue-500"
+                  initial={false}
+                  animate={{
+                    scaleX: activeSection === item.id ? 1 : 0,
+                    opacity: activeSection === item.id ? 1 : 0
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
               </motion.a>
             ))}
             <ThemeToggle />
@@ -141,19 +177,16 @@ const Navbar = () => {
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item) => (
                 <motion.button
-                  key={item}
-                  onClick={() => {
-                    document.getElementById(item.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
-                    setIsMenuOpen(false);
-                  }}
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
                   className={`block w-full text-left px-4 py-3 rounded-lg text-nav ${
-                    activeSection === item.toLowerCase()
+                    activeSection === item.id
                       ? 'bg-purple-100 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400'
                       : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                   }`}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {item}
+                  {item.label}
                 </motion.button>
               ))}
             </div>

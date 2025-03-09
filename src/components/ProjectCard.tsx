@@ -14,7 +14,6 @@ interface ProjectProps {
 }
 
 const ProjectCard: React.FC<ProjectProps> = (project) => {
-  const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -49,7 +48,7 @@ const ProjectCard: React.FC<ProjectProps> = (project) => {
             alt={project.title}
             className="w-full h-full object-cover"
             initial={{ scale: 1 }}
-            animate={{ scale: isHovered || isExpanded ? 1.1 : 1 }}
+            animate={{ scale: isExpanded ? 1.1 : 1 }}
             transition={{ duration: 0.4 }}
           />
           

@@ -5,6 +5,12 @@ interface DecorativeElementsProps {
   isLowPowerDevice: boolean;
 }
 
+// Add type for position
+interface Position {
+  x: number;
+  y: number;
+}
+
 const DecorativeElements: React.FC<DecorativeElementsProps> = ({ isLowPowerDevice }) => {
   const [mounted, setMounted] = useState(false);
   const [windowSize, setWindowSize] = useState({
@@ -37,11 +43,11 @@ const DecorativeElements: React.FC<DecorativeElementsProps> = ({ isLowPowerDevic
 
   // Generate random positions that don't overlap
   const generatePositions = (count: number) => {
-    const positions: { x: number; y: number; }[] = [];
+    const positions: Position[] = [];
     const minDistance = windowSize.width * 0.1; // Minimum distance between elements
     
     for (let i = 0; i < count; i++) {
-      let position;
+      let position: Position;
       let attempts = 0;
       
       do {
@@ -65,6 +71,7 @@ const DecorativeElements: React.FC<DecorativeElementsProps> = ({ isLowPowerDevic
 
   const elementCount = getElementCount();
   const positions = generatePositions(elementCount);
+
 
   return (
     <div className={`fixed inset-0 overflow-hidden pointer-events-none ${isLowPowerDevice ? 'low-end-device' : ''}`}>

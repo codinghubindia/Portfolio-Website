@@ -40,31 +40,6 @@ const projects = [
       'Ensures complete data privacy',
       'Supports multiple accounts & currencies'
     ]
-  },
-  {
-    title: 'Personal Finance Tracker',
-    description: 'A comprehensive finance tracking application built with the MERN stack and Chart.js',
-    fullDescription: 'This personal finance tracker helps users manage their finances by tracking income, expenses, and investments. It features interactive charts for visualizing spending patterns, budget planning tools, and automated categorization of transactions. The application is built with MongoDB for data storage, Express for the backend API, React for the frontend interface, and Node.js for server-side logic. Chart.js is used for data visualization, providing users with insightful graphs of their financial activities.',
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=1000',
-    tech: ['MongoDB', 'Express', 'React', 'Node.js', 'Chart.js', 'JWT Authentication', 'Responsive Design'],
-    demo: 'https://example.com/finance-tracker',
-    github: 'https://github.com/example/finance-tracker'
-  },
-  {
-    title: 'Portfolio Website',
-    description: 'A modern portfolio website built with React and Tailwind CSS',
-    image: 'https://images.unsplash.com/photo-1487014679447-9f8336841d58?auto=format&fit=crop&q=80&w=1000',
-    tech: ['React', 'Tailwind CSS', 'GSAP'],
-    demo: '#',
-    github: '#'
-  },
-  {
-    title: 'Windows App',
-    description: 'A desktop application built with C# .NET and SQLite',
-    image: 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?auto=format&fit=crop&q=80&w=1000',
-    tech: ['C#', '.NET', 'WPF', 'SQLite'],
-    demo: '#',
-    github: '#'
   }
 ];
 
@@ -282,7 +257,7 @@ function App() {
         <Navbar />
 
         {/* Hero Section - Optimized */}
-        <section className="relative min-h-screen flex items-center justify-center px-4">
+        <section id="home" className="relative min-h-screen flex items-center justify-center px-4">
           {/* Background Elements - Optimized */}
           <div 
             className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-700"

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Briefcase, GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface TimelineItem {

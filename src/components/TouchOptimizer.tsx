@@ -20,7 +20,7 @@ export const TouchOptimizer: React.FC = () => {
     }
 
     // Prevent double-tap zoom on mobile
-    document.addEventListener('touchstart', (e) => {
+    document.addEventListener('touchstart', (e: TouchEvent) => {
       if (e.touches.length > 1) {
         e.preventDefault();
       }
@@ -49,7 +49,7 @@ export const TouchOptimizer: React.FC = () => {
     }, { passive: true });
 
     // Optimize touch events
-    document.addEventListener('touchmove', (e) => {
+    document.addEventListener('touchmove', (e: TouchEvent) => {
       if (e.touches.length > 1) {
         e.preventDefault();
       }
@@ -66,11 +66,11 @@ export const TouchOptimizer: React.FC = () => {
     
     // Optimize initial load
     if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(() => {
+      window.requestIdleCallback(() => {
         // Preload critical components after initial render
-        import('../components/Timeline');
-        import('../components/ProjectCard');
-        import('../components/SkillsSection');
+        void import('../components/Timeline');
+        void import('../components/ProjectCard'); 
+        void import('../components/SkillsSection');
       });
     }
 

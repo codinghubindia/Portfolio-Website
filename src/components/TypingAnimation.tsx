@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import Typed from 'typed.js';
-import { motion } from 'framer-motion';
 
 interface TypingAnimationProps {
   strings: string[];
@@ -10,30 +9,32 @@ interface TypingAnimationProps {
   loop?: boolean;
   startDelay?: number;
   className?: string;
-  onComplete?: () => void;
   showCursor?: boolean;
+  onComplete?: () => void;
 }
 
 const TypingAnimation: React.FC<TypingAnimationProps> = ({
   strings,
   typeSpeed = 50,
   backSpeed = 30,
-  backDelay = 2000,
-  loop = true,
+  backDelay = 1000,
+  loop = false,
   startDelay = 0,
   className = "font-display text-4xl md:text-6xl lg:text-7xl font-bold text-center bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 bg-clip-text text-transparent",
-  onComplete,
-  showCursor = true
+  showCursor = true,
+  onComplete
 }) => {
   const el = useRef<HTMLSpanElement>(null);
-  const typed = useRef<any>(null);
+  const typed = useRef<Typed | null>(null);
 
   useEffect(() => {
     if (el.current) {
-      // Add custom cursor
-      const cursorElement = document.createElement('span');
-      cursorElement.className = 'custom-typed-cursor';
-      el.current.parentElement?.appendChild(cursorElement);
+      // Add custom cursor only if showCursor is true
+      if (showCursor) {
+        const cursorElement = document.createElement('span');
+        cursorElement.className = 'custom-typed-cursor';
+        el.current.parentElement?.appendChild(cursorElement);
+      }
 
       typed.current = new Typed(el.current, {
         strings,
@@ -42,9 +43,9 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({
         backDelay,
         loop,
         startDelay,
-        onComplete: onComplete || (() => {}), // Provide default empty function
+        onComplete: onComplete || (() => {}),
         smartBackspace: false,
-        showCursor: false, // Hide default cursor
+        showCursor: false, // Keep this false as we're using custom cursor
       });
     }
 
@@ -52,11 +53,13 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({
       if (typed.current) {
         typed.current.destroy();
       }
-      // Remove custom cursor
-      const cursor = document.querySelector('.custom-typed-cursor');
-      if (cursor) cursor.remove();
+      // Remove custom cursor if it exists
+      if (showCursor) {
+        const cursor = document.querySelector('.custom-typed-cursor');
+        if (cursor) cursor.remove();
+      }
     };
-  }, [strings, typeSpeed, backSpeed, backDelay, loop, startDelay, onComplete]);
+  }, [strings, typeSpeed, backSpeed, backDelay, loop, startDelay, onComplete, showCursor]);
 
   return (
     <div className="relative inline-block">

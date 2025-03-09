@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ProgressBar = () => {
   const [progress, setProgress] = useState(0);
