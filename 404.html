@@ -1,25 +1,395 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Redirecting...</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/Portfolio-Website/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Professional portfolio showcasing web development and app development services" />
+    <meta name="theme-color" content="#843dff" />
+    <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+    <title>Manjunatha N | Full Stack Developer</title>
+    
+    <!-- Critical CSS inline -->
+    <style>
+      .loading-screen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        width: 100vw;
+        background: linear-gradient(to bottom, #f9fafb, #ffffff);
+        transition: background-color 0.3s ease;
+      }
+
+      .dark .loading-screen {
+        background: linear-gradient(to bottom, #111827, #1f2937);
+      }
+
+      .loader {
+        position: relative;
+        width: 80px;
+        height: 80px;
+      }
+
+      .loader-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 3px solid transparent;
+        border-top-color: #843dff;
+        border-right-color: #ff3d77;
+        border-bottom-color: #3d91ff;
+        animation: spin 1s linear infinite;
+      }
+
+      .loader-ring::before {
+        content: '';
+        position: absolute;
+        inset: -3px;
+        border-radius: 50%;
+        background: linear-gradient(to right, #843dff, #ff3d77, #3d91ff);
+        -webkit-mask: 
+          linear-gradient(#fff 0 0) content-box, 
+          linear-gradient(#fff 0 0);
+        mask: 
+          linear-gradient(#fff 0 0) content-box, 
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        animation: borderRotate 2s linear infinite;
+        /* Add a subtle glow effect */
+        filter: drop-shadow(0 0 2px rgba(132, 61, 255, 0.3));
+      }
+
+      .loader-text {
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: system-ui, -apple-system, sans-serif;
+        color: #843dff;
+        font-size: 1rem;
+        font-weight: 500;
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards 0.5s;
+        white-space: nowrap;
+      }
+
+      .dark .loader-text {
+        color: #a78bfa;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes borderRotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(-360deg); }
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+        to { opacity: 1; transform: translateX(-50%) translateY(0); }
+      }
+
+      /* Fix for potential white borders in dark mode */
+      @media (prefers-color-scheme: dark) {
+        .loading-screen {
+          background: #111827;
+        }
+      }
+
+      /* Ensure no white flash during load */
+      html {
+        background: #f9fafb;
+      }
+
+      html.dark {
+        background: #111827;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      /* Mobile optimizations */
+      @media (max-width: 768px) {
+        .loader {
+          width: 60px;
+          height: 60px;
+        }
+
+        .loader-ring {
+          border-width: 2px;
+        }
+
+        .loader-ring::before {
+          inset: -2px;
+        }
+
+        .loader-text {
+          font-size: 0.875rem;
+          top: 80px;
+        }
+      }
+
+      /* Prevent content shifting */
+      html {
+        overflow-y: scroll;
+      }
+
+      /* Optimize animations for reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .loader-ring {
+          animation-duration: 1.5s;
+        }
+        
+        .loader-text {
+          animation-duration: 0.7s;
+        }
+      }
+      
+      /* Mobile performance optimizations */
+      .low-end-device .animate-section {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      
+      /* Fix for mobile viewport height issues */
+      .min-h-screen {
+        min-height: 100vh; /* Fallback */
+        min-height: calc(var(--vh, 1vh) * 100);
+      }
+      
+      /* Reduce paint operations on mobile */
+      @media (max-width: 768px) {
+        .backdrop-blur-lg {
+          -webkit-backdrop-filter: blur(8px);
+                  backdrop-filter: blur(8px);
+        }
+        
+        .blur-3xl {
+          filter: blur(24px);
+        }
+      }
+      
+      /* Optimize touch targets for mobile */
+      @media (max-width: 768px) {
+        button, a {
+          min-height: 44px;
+          min-width: 44px;
+        }
+      }
+
+      /* Optimize scrolling performance */
+      .scrolling * {
+        animation-play-state: paused !important;
+        transition: none !important;
+      }
+      
+      /* Use hardware acceleration for fixed elements */
+      .fixed {
+        will-change: transform;
+        transform: translateZ(0);
+      }
+      
+      /* Optimize paint operations during scroll */
+      @media (max-width: 768px) {
+        .bg-gradient-to-b,
+        .bg-gradient-to-r {
+          will-change: opacity;
+        }
+        
+        /* Reduce animation complexity on scroll for mobile */
+        .scrolling .particles-container > div {
+          display: none;
+        }
+        
+        /* Optimize background blur during scroll */
+        .scrolling .backdrop-blur-lg {
+          -webkit-backdrop-filter: none;
+                  backdrop-filter: none;
+        }
+      }
+      
+      /* Optimize rendering for hero section */
+      #home {
+        contain: content;
+      }
+
+      /* Optimize rendering with content-visibility */
+      @media (max-width: 768px) {
+        #portfolio, #services, #timeline, #contact {
+          content-visibility: auto;
+          contain-intrinsic-size: 1px 1000px;
+        }
+      }
+
+      /* Prevent flashing during initial load */
+      .initial-load * {
+        animation-play-state: paused !important;
+        transition: none !important;
+      }
+      
+      /* Improve paint performance */
+      .initial-load .backdrop-blur-lg,
+      .scrolling .backdrop-blur-lg {
+        -webkit-backdrop-filter: none !important;
+                backdrop-filter: none !important;
+      }
+      
+      /* Prevent layout shifts */
+      body {
+        overflow-x: hidden;
+      }
+      
+      /* Optimize rendering during scroll */
+      .scrolling {
+        will-change: scroll-position;
+      }
+      
+      /* Reduce motion during scroll */
+      .scrolling .motion-reduce {
+        display: none !important;
+      }
+
+      /* Optimize navbar during scroll */
+      .scrolling-nav {
+        transform: translateZ(0);
+        will-change: transform;
+        -webkit-backdrop-filter: none !important;
+                backdrop-filter: none !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+      }
+      
+      .dark .scrolling-nav {
+        background-color: rgba(17, 24, 39, 0.95) !important;
+      }
+
+      /* Prevent transition flicker on load */
+      :root[style*="--prevent-transition"] * {
+        transition: none !important;
+      }
+
+      /* Optimize initial load */
+      .loading {
+        overflow: hidden;
+      }
+
+      .loading * {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      /* Optimize paint operations */
+      .absolute {
+        transform: translateZ(0);
+      }
+
+      /* Reduce motion for users who prefer it */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
+      /* Optimize mobile performance */
+      @media (max-width: 768px) {
+        .blur-3xl {
+          filter: blur(24px);
+          transform: translateZ(0);
+        }
+
+        .backdrop-blur-sm {
+          -webkit-backdrop-filter: blur(4px);
+                  backdrop-filter: blur(4px);
+          transform: translateZ(0);
+        }
+
+        /* Reduce animation complexity on mobile */
+        .absolute {
+          will-change: transform, opacity;
+          contain: layout style paint;
+        }
+
+        /* Hide complex animations on mobile */
+        .md\:block {
+          display: none;
+        }
+      }
+
+      /* Optimize gradient animations */
+      .bg-gradient-to-br,
+      .bg-gradient-to-tr {
+        will-change: transform, opacity;
+        transform: translateZ(0);
+      }
+
+      /* Prevent layout shifts during animations */
+      .overflow-hidden {
+        contain: layout style paint;
+      }
+    </style>
+
+    <!-- Defer non-critical CSS -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- Theme initialization script -->
+    <script>
+      (function() {
+        document.documentElement.classList.remove('dark', 'light');
+        const savedTheme = localStorage.getItem('theme');
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const theme = savedTheme || systemTheme;
+        document.documentElement.classList.add(theme);
+        if (!savedTheme) {
+          localStorage.setItem('theme', theme);
+        }
+      })();
+    </script>
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages
       // MIT License
       // https://github.com/rafgraph/spa-github-pages
-      var pathSegmentsToKeep = 1;
-
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
     </script>
+
+    <!-- Preload critical JavaScript -->
+    <link rel="modulepreload" href="data:application/octet-stream;base64,aW1wb3J0IHsgU3RyaWN0TW9kZSB9IGZyb20gJ3JlYWN0JzsKaW1wb3J0IHsgY3JlYXRlUm9vdCB9IGZyb20gJ3JlYWN0LWRvbS9jbGllbnQnOwppbXBvcnQgeyBUaGVtZVByb3ZpZGVyIH0gZnJvbSAnLi9jb250ZXh0L1RoZW1lQ29udGV4dCc7CmltcG9ydCBBcHAgZnJvbSAnLi9BcHAnOwppbXBvcnQgJy4vaW5kZXguY3NzJzsKaW1wb3J0IHsgaW5pdCB9IGZyb20gJ0BlbWFpbGpzL2Jyb3dzZXInOwoKLy8gSW5pdGlhbGl6ZSBFbWFpbEpTIHdpdGggeW91ciBwdWJsaWMga2V5CmNvbnN0IHB1YmxpY0tleSA9IGltcG9ydC5tZXRhLmVudi5WSVRFX1BVQkxJQ19LRVk7CgppZiAoIXB1YmxpY0tleSkgewogIGNvbnNvbGUuZXJyb3IoJ0VtYWlsSlMgcHVibGljIGtleSBpcyBtaXNzaW5nJyk7Cn0gZWxzZSB7CiAgaW5pdChwdWJsaWNLZXkpOwp9CgovLyBSZW1vdmUgbGF6eSBsb2FkaW5nIGZvciB0aGUgbWFpbiBBcHAgY29tcG9uZW50IHRvIGVuc3VyZSBjb250ZW50IGFwcGVhcnMKY3JlYXRlUm9vdChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncm9vdCcpISkucmVuZGVyKAogIDxTdHJpY3RNb2RlPgogICAgPFRoZW1lUHJvdmlkZXI+CiAgICAgIDxBcHAgLz4KICAgIDwvVGhlbWVQcm92aWRlcj4KICA8L1N0cmljdE1vZGU+Cik7" />
+    
+    <!-- Add resource hints -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script type="module" crossorigin src="/assets/index-a16e5d33.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-9605ccb3.js">
+    <link rel="modulepreload" crossorigin href="/assets/animations-bbfdb01b.js">
+    <link rel="stylesheet" href="/assets/index-18dc6506.css">
   </head>
   <body>
-    Redirecting...
+    <div id="root">
+      <div class="loading-screen">
+        <div class="loader">
+          <div class="loader-ring"></div>
+          <div class="loader-text">Loading...</div>
+        </div>
+      </div>
+    </div>
+    
   </body>
-</html> 
+</html>
